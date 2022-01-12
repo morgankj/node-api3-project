@@ -1,15 +1,24 @@
 const User = require('../users/users-model');
 
 function logger(req, res, next) {
-  // DO YOUR MAGIC > I broke into multiple lines for readability and preference
-  console.log('Method: ', req.method);
-  console.log('URL: "', req.url, '"');
-  console.log('Timestamp: ', Date.now());
+  // DO YOUR MAGIC
+  console.log('Method: ', req.method, '| URL: ', req.url, '| Timestamp: ', Date.now());
   next();
 }
 
-function validateUserId(req, res, next) {
+async function validateUserId(req, res, next) {
   // DO YOUR MAGIC
+  try {
+    const possibleId = await User.getById(req.params.id);
+    if (possibleId) {
+      req.id = possibleId;
+      next();
+    } else {
+      next({status: 404, message: "user not found"});
+    }
+  } catch (err) {
+    next(err);
+  }
 }
 
 function validateUser(req, res, next) {
