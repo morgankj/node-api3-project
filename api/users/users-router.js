@@ -51,9 +51,18 @@ router.put('/:id', logger, validateUserId, validateUser, (req, res, next) => {
     .catch(next)
 });
 
-router.delete('/:id', logger, validateUserId, (req, res) => {
+router.delete('/:id', logger, validateUserId, (req, res, next) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+  Users.remove(req.params.id)
+    .then(count => {
+      if (count === 1) {
+        res.status(200).json(req.id);
+      } else {
+        res.status(500).json({ message: "The user could not be removed" })
+      }
+    })
+    .catch(next)
 });
 
 router.get('/:id/posts', logger, validateUserId, (req, res) => {
