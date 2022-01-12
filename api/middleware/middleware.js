@@ -14,7 +14,7 @@ async function validateUserId(req, res, next) {
       req.id = possibleId;
       next();
     } else {
-      next({status: 404, message: "user not found"});
+      next({ status: 404, message: "user not found" });
     }
   } catch (err) {
     next(err);
@@ -23,6 +23,12 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
   // DO YOUR MAGIC
+  const { name } = req.body;
+  if (!name) {
+    next({ status: 400, message: "missing required name field" });
+  } else {
+    next();
+  }
 }
 
 function validatePost(req, res, next) {
